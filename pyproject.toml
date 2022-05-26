@@ -6,8 +6,10 @@ authors = ["requinard <david@requinard.nl>"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-fastapi = "^0.78.0"
+fastapi = {extras = ["all"], version = "^0.78.0"}
 uvicorn = "^0.17.6"
+pytest = "^7.1.2"
+sqlmodel = "^0.0.6"
 
 [tool.poetry.dev-dependencies]
 
