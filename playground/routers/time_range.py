@@ -10,14 +10,13 @@ from playground.providers.database import get_session
 
 time_range_router = APIRouter()
 
-T = TypeVar("T")
-
 
 class TimeRangedModel(SQLModel, table=True):
     id: Optional[int] = Field(None, primary_key=True)
     comment: str = Field(...)
     date_created: datetime = Field(..., sa_column=Column(DateTime))
 
+T = TypeVar('T')
 
 def with_timerange(time_from: Optional[datetime] = Query(None, description="The minimum datetime of items to include"),
                    time_to: Optional[datetime] = Query(None, description="The maximum datetime of items to include")):

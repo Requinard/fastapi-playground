@@ -1,4 +1,4 @@
-from pydantic.tools import lru_cache
+from functools import lru_cache
 from sqlalchemy.engine import Engine
 from sqlmodel import create_engine, SQLModel, Session
 
