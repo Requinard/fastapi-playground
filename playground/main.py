@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from starlette.responses import RedirectResponse
 
-from paginator import pagination_router
+from .paginator import pagination_router
 
 app = FastAPI()
 

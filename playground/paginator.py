@@ -9,6 +9,8 @@ from pydantic.schema import Generic
 pagination_router = APIRouter()
 PaginatedType = TypeVar("PaginatedType")
 
+PAGINATED_SIZE = 1000
+
 
 class PaginatedResult(GenericModel, Generic[PaginatedType]):
     page: int
@@ -18,7 +20,7 @@ class PaginatedResult(GenericModel, Generic[PaginatedType]):
     data: List[PaginatedType]
 
 
-def with_paginator(page: int = Query(0, gte=0), page_size: int = Query(100, gte=0, lte=0)) -> Callable[
+def with_paginator(page: int = Query(0, ge=0), page_size: int = Query(100, ge=0, le=1000)) -> Callable[
     [List[PaginatedType]], PaginatedResult[PaginatedType]]:
     def paginate(items: List[PaginatedType]) -> PaginatedResult[PaginatedType]:
         start_item = page_size * page
@@ -36,7 +38,7 @@ def with_paginator(page: int = Query(0, gte=0), page_size: int = Query(100, gte=
 
 @lru_cache
 def get_example_list():
-    return list(range(0, 1100))
+    return list(range(0, PAGINATED_SIZE))
 
 
 @pagination_router.get("/unpaginated", response_model=List[int])
