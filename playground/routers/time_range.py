@@ -45,8 +45,7 @@ def create_test_comments(session: Session = Depends(get_session)):
     for i in range(10):
         comment = TimeRangedModel(
             comment=f"Comment {i}",
-            time_from=datetime.now(),
-            time_to=datetime.now() + timedelta(days=1)
+            date_created=datetime.now(),
         )
 
         session.add(comment)
