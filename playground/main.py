@@ -1,10 +1,28 @@
+import time
+
 from fastapi import FastAPI
+from fastapi.responses import ORJSONResponse
+from msgpack_asgi import MessagePackMiddleware
+from starlette.middleware.gzip import GZipMiddleware
+from starlette.requests import Request
 from starlette.responses import RedirectResponse
 
 from playground.routers.paginator import pagination_router
 from playground.routers.time_range import time_range_router
 
-app = FastAPI()
+app = FastAPI(default_response_class=ORJSONResponse)
+
+
+app.add_middleware(GZipMiddleware, minimum_size=1000)
+app.add_middleware(MessagePackMiddleware)
+
+@app.middleware("http")
+async def add_process_time_header(request: Request, call_next):
+    start_time = time.time()
+    response = await call_next(request)
+    process_time = time.time() - start_time
+    response.headers["X-Process-Time"] = str(process_time)
+    return response
 
 
 @app.get("/", include_in_schema=False)
