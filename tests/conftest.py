@@ -3,7 +3,7 @@ from fastapi.testclient import TestClient
 from sqlmodel import Session, SQLModel, create_engine
 from sqlmodel.pool import StaticPool
 
-from playground.database import get_session
+from playground.providers.database import get_session
 from playground.main import app
 
 

@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 from starlette.responses import RedirectResponse
 
-from .paginator import pagination_router
+from playground.routers.paginator import pagination_router
+from playground.routers.time_range import time_range_router
 
 app = FastAPI()
 
@@ -12,3 +13,4 @@ def redirect_to_docs():
 
 
 app.include_router(pagination_router, prefix="/pagination", tags=["Pagination"])
+app.include_router(time_range_router, prefix="/timeranged", tags=["Time Range"])

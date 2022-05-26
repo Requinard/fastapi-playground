@@ -1,6 +1,6 @@
 from starlette.testclient import TestClient
 
-from playground.paginator import PAGINATED_SIZE, PaginatedResult
+from playground.routers.paginator import PAGINATED_SIZE, PaginatedResult
 
 
 def test_unpaginated(client: TestClient):

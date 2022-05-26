@@ -8,7 +8,7 @@ def get_database_engine() -> Engine:
     """
     Create an engine and memoize the results. This ensures we only create a single engine.
     """
-    sqlite_file_name = "../database.db"
+    sqlite_file_name = "../../database.db"
     sqlite_url = f"sqlite:///{sqlite_file_name}"
 
     connect_args = {"check_same_thread": False}
@@ -19,9 +19,10 @@ def get_database_engine() -> Engine:
     return engine
 
 
-def get_session(engine=get_database_engine()) -> Session:
+def get_session():
     """
     Yield a session that can be used as a FastAPI dependency
     """
+    engine = get_database_engine()
     with Session(engine) as session:
         yield session

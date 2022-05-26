@@ -1,4 +1,4 @@
-from playground.database import get_database_engine, get_session
+from playground.providers.database import get_database_engine, get_session
 
 
 def test_engine_is_cached():
