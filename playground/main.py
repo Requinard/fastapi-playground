@@ -7,6 +7,7 @@ from starlette.middleware.gzip import GZipMiddleware
 from starlette.requests import Request
 from starlette.responses import RedirectResponse
 
+from playground.routers.auditing import auditing_router
 from playground.routers.paginator import pagination_router
 from playground.routers.time_range import time_range_router
 
@@ -32,3 +33,4 @@ def redirect_to_docs():
 
 app.include_router(pagination_router, prefix="/pagination", tags=["Pagination"])
 app.include_router(time_range_router, prefix="/timeranged", tags=["Time Range"])
+app.include_router(auditing_router, prefix="/auditing", tags=["Auditing"])
