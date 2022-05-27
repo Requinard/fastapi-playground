@@ -41,7 +41,7 @@ def with_paginator(page: int = Query(0, ge=0), page_size: int = Query(100, ge=0,
     return apply_pagination
 
 
-@time_range_router.get("/", response_model=List[TimeRangedModel])
+@time_range_router.get("/", response_model=List[TimeRangedModel], tags=["Pagination"])
 def get_comments(session: Session = Depends(get_session), apply_timerange=Depends(with_timerange), paginator=Depends(with_paginator)):
     comments_query = apply_timerange(TimeRangedModel.date_created, select(TimeRangedModel))
     comments_query = paginator(comments_query)
