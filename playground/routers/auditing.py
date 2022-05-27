@@ -49,7 +49,7 @@ auditing_router = APIRouter()
 
 
 @auditing_router.get("/manual")
-def auditing_with_manual_messages(auditer=Depends(ParamaterizedAuditer("manual"))):
+async def auditing_with_manual_messages(auditer=Depends(ParamaterizedAuditer("manual"))):
     """
     This endpoint allows us to manually add messages to the auditer.
     """
@@ -61,7 +61,7 @@ def auditing_with_manual_messages(auditer=Depends(ParamaterizedAuditer("manual")
 
 
 @auditing_router.get("/automatic", dependencies=[Depends(ParamaterizedAuditer("automatic"))])
-def auditing_with_automatic_messages():
+async def auditing_with_automatic_messages():
     """
     This endpoint will automatically use the auditer without needing to add any messages.
     """

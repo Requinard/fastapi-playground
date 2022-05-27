@@ -2,9 +2,11 @@ from functools import lru_cache
 from sqlalchemy.engine import Engine
 from sqlmodel import create_engine, SQLModel, Session
 
+from playground.providers.settings import get_settings
 
-@lru_cache
-def get_database_engine() -> Engine:
+
+@lru_cache(None)
+def get_database_engine(settings = get_settings()) -> Engine:
     """
     Create an engine and memoize the results. This ensures we only create a single engine.
     """
@@ -12,7 +14,7 @@ def get_database_engine() -> Engine:
     sqlite_url = f"sqlite:///{sqlite_file_name}"
 
     connect_args = {"check_same_thread": False}
-    engine = create_engine(sqlite_url, echo=True, connect_args=connect_args)
+    engine = create_engine(sqlite_url, echo=settings.database_echo, echo_pool=settings.database_echo, connect_args=connect_args)
 
     SQLModel.metadata.create_all(engine)
 

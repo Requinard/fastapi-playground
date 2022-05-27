@@ -11,7 +11,7 @@ def raise_on_4xx_5xx(response: httpx.Response):
             status_code=400,
             detail={
                 "message": "Upstream request failed",
-                "upstream_request": str(response.request)
+                "upstream_request": str(e.request)
             }
         )
 
