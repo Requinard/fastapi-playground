@@ -41,3 +41,12 @@ def test_respx_mock(client: TestClient, respx_mock):
 
     assert data['auth_token'] == None
     assert data['ip'] == "127.0.0.1"
+
+
+@pytest.mark.respx(base_url="https://ifconfig.me")
+def test_respx_mock_with_failure(client: TestClient, respx_mock):
+    respx_mock.get("/ip").mock(return_value=httpx.Response(404, content="haha suck it"))
+
+    response = client.get("/auth-passthrough/sync")
+
+    assert response.status_code == 400

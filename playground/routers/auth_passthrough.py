@@ -1,6 +1,31 @@
 import httpx
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from starlette.requests import Request
+
+
+def raise_on_4xx_5xx(response: httpx.Response):
+    try:
+        response.raise_for_status()
+    except httpx.HTTPStatusError as e:
+        raise HTTPException(
+            status_code=400,
+            detail={
+                "message": "Upstream request failed",
+                "upstream_request": str(response.request)
+            }
+        )
+
+async def a_raise_on_4xx_5xx(response: httpx.Response):
+    try:
+        response.raise_for_status()
+    except httpx.HTTPStatusError as e:
+        raise HTTPException(
+            status_code=400,
+            detail={
+                "message": "Upstream request failed",
+                "upstream_request": str(response.request)
+            }
+        )
 
 
 def with_http_client(request: Request) -> httpx.Client:
@@ -13,6 +38,7 @@ def with_http_client(request: Request) -> httpx.Client:
         headers['Authorization'] = auth
 
     with httpx.Client(headers=headers) as client:
+        client.event_hooks['response'] = [raise_on_4xx_5xx]
         yield client
 
 
@@ -25,7 +51,8 @@ async def with_ahttp_client(request: Request) -> httpx.AsyncClient:
     if auth := request.headers.get("authorization"):
         headers['Authorization'] = auth
 
-    async with httpx.AsyncClient(headers=headers) as client:
+    async with httpx.AsyncClient(headers=headers, ) as client:
+        client.event_hooks['response'] = [a_raise_on_4xx_5xx]
         yield client
 
 
