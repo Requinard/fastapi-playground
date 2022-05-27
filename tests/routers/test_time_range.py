@@ -2,20 +2,21 @@ from datetime import datetime
 
 import pytest
 from sqlmodel import Session
+from sqlmodel.ext.asyncio.session import AsyncSession
 from starlette.testclient import TestClient
 
 from playground.routers.time_range import TimeRangedModel
 
 
 @pytest.fixture(autouse=True)
-def create_comments(session: Session):
+async def create_comments(async_session: AsyncSession):
     comment = TimeRangedModel(
         comment="Hey uhh guys, watch out for this Covid19 thing ok?",
         date_created=datetime(year=2020, month=3, day=11)
     )
 
-    session.add(comment)
-    session.commit()
+    async_session.add(comment)
+    await async_session.commit()
 
 
 @pytest.mark.apitest

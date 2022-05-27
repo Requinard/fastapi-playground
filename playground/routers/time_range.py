@@ -4,9 +4,10 @@ from typing import Optional, List, TypeVar, Callable
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy import Column, DateTime
 from sqlmodel import SQLModel, Field, select, Session
+from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlmodel.sql.expression import SelectOfScalar
 
-from playground.providers.database import get_session
+from playground.providers.database_async import get_session
 
 time_range_router = APIRouter()
 
@@ -42,15 +43,15 @@ def with_paginator(page: int = Query(0, ge=0), page_size: int = Query(100, ge=0,
 
 
 @time_range_router.get("/", response_model=List[TimeRangedModel], tags=["Pagination"])
-def get_comments(session: Session = Depends(get_session), apply_timerange=Depends(with_timerange), paginator=Depends(with_paginator)):
+async def get_comments(session: AsyncSession = Depends(get_session), apply_timerange=Depends(with_timerange), paginator=Depends(with_paginator)):
     comments_query = apply_timerange(TimeRangedModel.date_created, select(TimeRangedModel))
     comments_query = paginator(comments_query)
 
-    return session.exec(comments_query).all()
+    return (await session.exec(comments_query)).all()
 
 
 @time_range_router.post("/")
-def create_test_comments(session: Session = Depends(get_session)):
+async def create_test_comments(session: AsyncSession = Depends(get_session)):
     for i in range(10):
         comment = TimeRangedModel(
             comment=f"Comment {i}",
@@ -59,4 +60,4 @@ def create_test_comments(session: Session = Depends(get_session)):
 
         session.add(comment)
 
-    session.commit()
+    await session.commit()

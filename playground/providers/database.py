@@ -10,8 +10,7 @@ def get_database_engine(settings = get_settings()) -> Engine:
     """
     Create an engine and memoize the results. This ensures we only create a single engine.
     """
-    sqlite_file_name = "./database.db"
-    sqlite_url = f"sqlite:///{sqlite_file_name}"
+    sqlite_url = f"sqlite:///{settings.database_url}"
 
     connect_args = {"check_same_thread": False}
     engine = create_engine(sqlite_url, echo=settings.database_echo, echo_pool=settings.database_echo, connect_args=connect_args)

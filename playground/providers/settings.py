@@ -8,6 +8,7 @@ class Settings(BaseSettings):
     Configure application settings. These should be filled from envvars first, .env files second.
     """
     database_echo: bool = Field(False)
+    database_url: str = "./database.db"
 
 
 @lru_cache(None)
