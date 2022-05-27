@@ -2,6 +2,8 @@
 
 A project where I make FastAPI do some cool stuff such as generic filtering, async database use and more.
 
+It really takes the effort out of developing APIs.
+
 ## Interesting bits
 
 These are some interesting takeaways to maybe copy and paste into your own projects.
