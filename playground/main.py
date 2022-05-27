@@ -9,6 +9,7 @@ from starlette.responses import RedirectResponse
 
 from playground.routers.auditing import auditing_router
 from playground.routers.auth_passthrough import auth_passthrough_router
+from playground.routers.health import health_router
 from playground.routers.paginator import pagination_router
 from playground.routers.time_range import time_range_router
 
@@ -36,3 +37,4 @@ app.include_router(pagination_router, prefix="/pagination", tags=["Pagination"])
 app.include_router(time_range_router, prefix="/timeranged", tags=["Time Range"])
 app.include_router(auditing_router, prefix="/auditing", tags=["Auditing"])
 app.include_router(auth_passthrough_router, prefix="/auth-passthrough", tags=["Auth", "HTTP"])
+app.include_router(health_router, prefix="/health", tags=["Health"])
