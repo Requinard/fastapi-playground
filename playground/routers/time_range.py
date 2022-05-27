@@ -1,5 +1,5 @@
-from datetime import datetime, timedelta
-from typing import Optional, List, TypeVar
+from datetime import datetime
+from typing import Optional, List, TypeVar, Callable
 
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy import Column, DateTime
@@ -16,7 +16,9 @@ class TimeRangedModel(SQLModel, table=True):
     comment: str = Field(...)
     date_created: datetime = Field(..., sa_column=Column(DateTime))
 
+
 T = TypeVar('T')
+
 
 def with_timerange(time_from: Optional[datetime] = Query(None, description="The minimum datetime of items to include"),
                    time_to: Optional[datetime] = Query(None, description="The maximum datetime of items to include")):
@@ -32,9 +34,17 @@ def with_timerange(time_from: Optional[datetime] = Query(None, description="The 
     return apply_timerange
 
 
+def with_paginator(page: int = Query(0, ge=0), page_size: int = Query(100, ge=0, le=1000)) -> Callable[[SelectOfScalar[T]], SelectOfScalar[T]]:
+    def apply_pagination(query: SelectOfScalar[T]):
+        return query.limit(page_size).offset(page_size * page)
+
+    return apply_pagination
+
+
 @time_range_router.get("/", response_model=List[TimeRangedModel])
-def get_comments(session: Session = Depends(get_session), apply_timerange=Depends(with_timerange)):
+def get_comments(session: Session = Depends(get_session), apply_timerange=Depends(with_timerange), paginator=Depends(with_paginator)):
     comments_query = apply_timerange(TimeRangedModel.date_created, select(TimeRangedModel))
+    comments_query = paginator(comments_query)
 
     return session.exec(comments_query).all()
 
