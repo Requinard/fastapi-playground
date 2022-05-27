@@ -4,6 +4,11 @@ from starlette.requests import Request
 
 
 def raise_on_4xx_5xx(response: httpx.Response):
+    """
+    Evaluate a `httpx.Response`. In case of an error, it will re-emit the error as a `fastapi.HTTPException`. This lets FastAPI forward the error to the client.
+
+    This method is blocking. It can be used in both regular and async functions. However, it should not be used in async functions due to said blocking.
+    """
     try:
         response.raise_for_status()
     except httpx.HTTPStatusError as e:
@@ -15,7 +20,13 @@ def raise_on_4xx_5xx(response: httpx.Response):
             }
         )
 
+
 async def a_raise_on_4xx_5xx(response: httpx.Response):
+    """
+      Evaluate a `httpx.Response`. In case of an error, it will re-emit the error as a `fastapi.HTTPException`. This lets FastAPI forward the error to the client.
+
+      This method is non-blocking. It can only be used in async functions. Running in sync is possible but should be avoided.
+      """
     try:
         response.raise_for_status()
     except httpx.HTTPStatusError as e:
@@ -30,7 +41,11 @@ async def a_raise_on_4xx_5xx(response: httpx.Response):
 
 def with_http_client(request: Request) -> httpx.Client:
     """
-    Creates a new HTTP client with the incoming authorization injected. This lets us masquerade as a user to other services.
+    A FastAPI dependency that creates a HTTP client to call other services.
+
+    It automatically inserts the clients `Authorization`, allowing us to act on behalf of a user.
+
+    This method is blocking. It can be used in both regular and async functions. However, it should not be used in async functions due to said blocking.
     """
     headers = {}
 
@@ -44,7 +59,11 @@ def with_http_client(request: Request) -> httpx.Client:
 
 async def with_ahttp_client(request: Request) -> httpx.AsyncClient:
     """
-    Creates a new HTTP client with the incoming authorization injected. This lets us masquerade as a user to other services.
+    A FastAPI dependency that creates a HTTP client to call other services.
+
+    It automatically inserts the clients `Authorization`, allowing us to act on behalf of a user.
+
+    This method is non-blocking. It can only be used in async functions. Running in sync is possible but should be avoided.
     """
     headers = {}
 
@@ -60,9 +79,11 @@ auth_passthrough_router = APIRouter()
 
 
 @auth_passthrough_router.get("/sync")
-def get_for_client(client: httpx.Client = Depends(with_http_client)):
+def get_ip_sync(client: httpx.Client = Depends(with_http_client)):
     """
-    Use the passthrough client to make requests
+    Get the server IP with the clients `Authorization` header.
+
+    This method is blocking.
     """
     ip = client.get("https://ifconfig.me/ip")
     return {
@@ -72,7 +93,12 @@ def get_for_client(client: httpx.Client = Depends(with_http_client)):
 
 
 @auth_passthrough_router.get("/async")
-async def get_async(client: httpx.AsyncClient = Depends(with_ahttp_client)):
+async def get_ip_async(client: httpx.AsyncClient = Depends(with_ahttp_client)):
+    """
+    Get the server IP with the clients `Authorization` header.
+
+    This method is non-blocking.
+    """
     ip = await client.get("https://ifconfig.me/ip")
 
     return {

@@ -12,5 +12,11 @@ class Settings(BaseSettings):
 
 
 @lru_cache(None)
-def get_settings():
+def get_settings() -> Settings:
+    """
+    Get an instance of the `Settings`.
+
+    @lru_cache ensures that there is only a single `Settings` that we can use
+    :return:
+    """
     return Settings()

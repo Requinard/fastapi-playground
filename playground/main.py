@@ -13,6 +13,7 @@ from playground.routers.health import health_router
 from playground.routers.paginator import pagination_router
 from playground.routers.time_range import time_range_router
 
+# Create the app and apply some middleware
 app = FastAPI(default_response_class=ORJSONResponse)
 
 app.add_middleware(GZipMiddleware, minimum_size=1000)
@@ -21,6 +22,9 @@ app.add_middleware(MessagePackMiddleware)
 
 @app.middleware("http")
 async def add_process_time_header(request: Request, call_next):
+    """
+    Measure request execution time and add it to the response as a header.
+    """
     start_time = time.time()
     response = await call_next(request)
     process_time = time.time() - start_time
@@ -30,9 +34,13 @@ async def add_process_time_header(request: Request, call_next):
 
 @app.get("/", include_in_schema=False)
 def redirect_to_docs():
+    """
+    Automatically redirect a user to the docs.
+    """
     return RedirectResponse("/docs")
 
 
+# Add the individual routers
 app.include_router(pagination_router, prefix="/pagination", tags=["Pagination"])
 app.include_router(time_range_router, prefix="/timeranged", tags=["Time Range"])
 app.include_router(auditing_router, prefix="/auditing", tags=["Auditing"])
