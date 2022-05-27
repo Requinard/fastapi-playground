@@ -7,6 +7,7 @@ def test_engine_is_cached():
 
     assert e1 is e2
 
+
 def test_session_is_different():
     s1 = get_session()
     s2 = get_session()

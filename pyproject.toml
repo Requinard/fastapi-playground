@@ -11,10 +11,15 @@ uvicorn = "^0.17.6"
 sqlmodel = "^0.0.6"
 uuid = "^1.30"
 msgpack-asgi = "^1.1.0"
+pyproject-flake8 = "^0.0.1-alpha.4"
+pytest-mimesis = "^1.1.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.1.2"
 mypy = "^0.960"
+pytest-cov = "^3.0.0"
+flake8 = "^4.0.1"
+pytest-repeat = "^0.9.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -35,3 +40,6 @@ init_forbid_extra = true
 init_typed = true
 warn_required_dynamic_aliases = true
 warn_untyped_fields = true
+
+[tool.flake8]
+max_line_length = 180

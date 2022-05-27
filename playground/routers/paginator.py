@@ -20,7 +20,8 @@ class PaginatedResult(GenericModel, Generic[PaginatedType]):
 
 
 def with_paginator(page: int = Query(0, ge=0), page_size: int = Query(100, ge=0, le=1000)) -> Callable[
-    [List[PaginatedType]], PaginatedResult[PaginatedType]]:
+    [List[PaginatedType]], PaginatedResult[PaginatedType]
+]:
     def paginate(items: List[PaginatedType]) -> PaginatedResult[PaginatedType]:
         start_item = page_size * page
         end_item = start_item + page_size
@@ -47,6 +48,6 @@ def get_unpaginated():
 
 @pagination_router.get("/paginated", response_model=PaginatedResult[int])
 def get_paginated(paginator=Depends(with_paginator)):
-    l = get_example_list()
+    example_list = get_example_list()
 
-    return paginator(l)
+    return paginator(example_list)

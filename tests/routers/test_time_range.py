@@ -18,6 +18,7 @@ def create_comments(session: Session):
     session.commit()
 
 
+@pytest.mark.apitest
 def test_get_comments_works(client: TestClient):
     response = client.get("/timeranged/")
 
@@ -26,6 +27,7 @@ def test_get_comments_works(client: TestClient):
     assert len(data) == 1
 
 
+@pytest.mark.apitest
 def test_comments_exclude_with_time_from(client: TestClient):
     response = client.get("/timeranged/", params={
         'time_from': datetime.now()
@@ -36,6 +38,7 @@ def test_comments_exclude_with_time_from(client: TestClient):
     assert len(data) == 0
 
 
+@pytest.mark.apitest
 def test_comments_include_with_time_from(client: TestClient):
     response = client.get("/timeranged/", params={
         'time_from': datetime(year=2020, month=1, day=1)
@@ -46,6 +49,7 @@ def test_comments_include_with_time_from(client: TestClient):
     assert len(data) == 1
 
 
+@pytest.mark.apitest
 def test_exclude_with_time_to(client: TestClient):
     response = client.get("/timeranged/", params={
         'time_to': datetime(year=2020, month=1, day=1)
@@ -56,6 +60,7 @@ def test_exclude_with_time_to(client: TestClient):
     assert len(data) == 0
 
 
+@pytest.mark.apitest
 def test_include_with_time_to(client: TestClient):
     response = client.get("/timeranged/", params={
         'time_to': datetime(year=2022, month=1, day=1)
@@ -64,3 +69,23 @@ def test_include_with_time_to(client: TestClient):
     data = response.json()
 
     assert len(data) == 1
+
+
+@pytest.mark.apitest
+def test_with_paginator_first_page(client: TestClient):
+    response = client.get("/timeranged")
+
+    data = response.json()
+
+    assert len(data) == 1
+
+
+@pytest.mark.apitest
+def test_paginator_with_empty_page(client: TestClient):
+    response = client.get("/timeranged", params={
+        'page': 500
+    })
+
+    data = response.json()
+
+    assert len(data) == 0

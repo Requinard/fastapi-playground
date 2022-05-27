@@ -13,9 +13,9 @@ from playground.routers.time_range import time_range_router
 
 app = FastAPI(default_response_class=ORJSONResponse)
 
-
 app.add_middleware(GZipMiddleware, minimum_size=1000)
 app.add_middleware(MessagePackMiddleware)
+
 
 @app.middleware("http")
 async def add_process_time_header(request: Request, call_next):
