@@ -1,11 +1,11 @@
 from datetime import datetime
 
 import pytest
-from sqlmodel import Session
+from hypothesis import given, strategies as st
 from sqlmodel.ext.asyncio.session import AsyncSession
 from starlette.testclient import TestClient
 
-from playground.routers.time_range import TimeRangedModel
+from playground.routers.time_range import TimeRangedModel, ModelCreateSerializer
 
 
 @pytest.fixture(autouse=True)
@@ -90,3 +90,26 @@ def test_paginator_with_empty_page(client: TestClient):
     data = response.json()
 
     assert len(data) == 0
+
+
+@pytest.mark.apitest
+def test_create_new_item(client: TestClient):
+    """
+    This test uses hypothesis to *automatically* create instances of the `ModelCreateSerializer` that we can send.
+
+    With this we can quickly test a range of without writing individual test cases.
+    """
+    @given(instance=st.builds(ModelCreateSerializer))
+    def inner(instance: ModelCreateSerializer):
+        """
+        Due to pytest and hypothesis, we have to use an inner function to get everything to work. I'm looking at fixes for this.
+        """
+        response = client.post("/timeranged/create", data=instance.json())
+
+        assert response.status_code == 200
+
+        data = response.json()
+
+        assert data['comment'] == instance.comment
+
+    inner()

@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import Optional, List, TypeVar, Callable, Any
 
 from fastapi import APIRouter, Depends, Query
+from pydantic import BaseModel
 from sqlalchemy import Column, DateTime
 from sqlmodel import SQLModel, Field, select
 from sqlmodel.ext.asyncio.session import AsyncSession
@@ -115,3 +116,22 @@ async def create_test_comments(session: AsyncSession = Depends(get_session)):
         session.add(comment)
 
     await session.commit()
+
+
+class ModelCreateSerializer(BaseModel):
+    comment: str = Field(..., min_length=3)
+
+
+@time_range_router.post("/create", response_model=TimeRangedModel)
+async def create_new(model: ModelCreateSerializer, session: AsyncSession = Depends(get_session)):
+    time_model = TimeRangedModel(
+        comment=model.comment,
+        date_created=datetime.now()
+    )
+
+    session.add(time_model)
+
+    await session.commit()
+    await session.refresh(time_model)
+
+    return time_model
