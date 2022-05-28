@@ -12,6 +12,7 @@ from playground.providers.database_async import get_session as get_async_session
 
 pytestmark = pytest.mark.anyio
 
+
 @pytest.fixture(name="session")
 def session_fixture():
     engine = create_engine(
@@ -24,14 +25,14 @@ def session_fixture():
 
 @pytest.fixture(name="async_session")
 async def async_session_fixture():
-    engine = create_async_engine(f"sqlite+aiosqlite://", poolclass=StaticPool, future=True)
+    engine = create_async_engine(
+        "sqlite+aiosqlite://", poolclass=StaticPool, future=True
+    )
 
     async with engine.begin() as conn:
         await conn.run_sync(SQLModel.metadata.create_all)
 
-    async_session = sessionmaker(
-        engine, class_=AsyncSession, expire_on_commit=False
-    )
+    async_session = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
     async with async_session() as session:
         yield session
@@ -52,4 +53,4 @@ def client_fixture(session: Session, async_session: AsyncSession):
 
 @pytest.fixture(autouse=True)
 def anyio_backend():
-    return 'asyncio'
+    return "asyncio"

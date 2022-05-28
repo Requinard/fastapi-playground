@@ -44,5 +44,7 @@ def redirect_to_docs():
 app.include_router(pagination_router, prefix="/pagination", tags=["Pagination"])
 app.include_router(time_range_router, prefix="/timeranged", tags=["Time Range"])
 app.include_router(auditing_router, prefix="/auditing", tags=["Auditing"])
-app.include_router(auth_passthrough_router, prefix="/auth-passthrough", tags=["Auth", "HTTP"])
+app.include_router(
+    auth_passthrough_router, prefix="/auth-passthrough", tags=["Auth", "HTTP"]
+)
 app.include_router(health_router, prefix="/health", tags=["Health"])

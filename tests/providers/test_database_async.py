@@ -10,10 +10,10 @@ async def test_async_engine_same():
 
     assert e1 is e2
 
+
 @pytest.mark.anyio
 async def test_async_session_not_same():
     s1 = get_session()
     s2 = get_session()
 
     assert s1 is not s2
-

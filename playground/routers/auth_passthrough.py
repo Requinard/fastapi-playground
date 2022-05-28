@@ -16,17 +16,17 @@ def raise_on_4xx_5xx(response: httpx.Response):
             status_code=400,
             detail={
                 "message": "Upstream request failed",
-                "upstream_request": str(e.request)
-            }
+                "upstream_request": str(e.request),
+            },
         ) from e
 
 
 async def a_raise_on_4xx_5xx(response: httpx.Response):
     """
-      Evaluate a `httpx.Response`. In case of an error, it will re-emit the error as a `fastapi.HTTPException`. This lets FastAPI forward the error to the client.
+    Evaluate a `httpx.Response`. In case of an error, it will re-emit the error as a `fastapi.HTTPException`. This lets FastAPI forward the error to the client.
 
-      This method is non-blocking. It can only be used in async functions. Running in sync is possible but should be avoided.
-      """
+    This method is non-blocking. It can only be used in async functions. Running in sync is possible but should be avoided.
+    """
     try:
         response.raise_for_status()
     except httpx.HTTPStatusError as e:
@@ -34,8 +34,8 @@ async def a_raise_on_4xx_5xx(response: httpx.Response):
             status_code=400,
             detail={
                 "message": "Upstream request failed",
-                "upstream_request": str(response.request)
-            }
+                "upstream_request": str(response.request),
+            },
         ) from e
 
 
@@ -50,10 +50,10 @@ def with_http_client(request: Request) -> httpx.Client:
     headers = {}
 
     if auth := request.headers.get("authorization"):
-        headers['Authorization'] = auth
+        headers["Authorization"] = auth
 
     with httpx.Client(headers=headers) as client:
-        client.event_hooks['response'] = [raise_on_4xx_5xx]
+        client.event_hooks["response"] = [raise_on_4xx_5xx]
         yield client
 
 
@@ -68,10 +68,12 @@ async def with_ahttp_client(request: Request) -> httpx.AsyncClient:
     headers = {}
 
     if auth := request.headers.get("authorization"):
-        headers['Authorization'] = auth
+        headers["Authorization"] = auth
 
-    async with httpx.AsyncClient(headers=headers, ) as client:
-        client.event_hooks['response'] = [a_raise_on_4xx_5xx]
+    async with httpx.AsyncClient(
+        headers=headers,
+    ) as client:
+        client.event_hooks["response"] = [a_raise_on_4xx_5xx]
         yield client
 
 
@@ -86,10 +88,7 @@ def get_ip_sync(client: httpx.Client = Depends(with_http_client)):
     This method is blocking.
     """
     ip = client.get("https://ifconfig.me/ip")
-    return {
-        "ip": ip.text,
-        "auth_token": client.headers.get("Authorization")
-    }
+    return {"ip": ip.text, "auth_token": client.headers.get("Authorization")}
 
 
 @auth_passthrough_router.get("/async")
@@ -101,7 +100,4 @@ async def get_ip_async(client: httpx.AsyncClient = Depends(with_ahttp_client)):
     """
     ip = await client.get("https://ifconfig.me/ip")
 
-    return {
-        "ip": ip.text,
-        "auth_token": client.headers.get("Authorization")
-    }
+    return {"ip": ip.text, "auth_token": client.headers.get("Authorization")}

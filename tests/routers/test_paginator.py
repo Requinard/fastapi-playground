@@ -29,7 +29,7 @@ def test_paginated_without_changes(client: TestClient):
 def test_paginated_with_custom_page_size(client: TestClient):
     page_size = 5
 
-    response = client.get("/pagination/paginated", params={'page_size': page_size})
+    response = client.get("/pagination/paginated", params={"page_size": page_size})
 
     data = PaginatedResult.parse_obj(response.json())
 
@@ -40,7 +40,7 @@ def test_paginated_with_custom_page_size(client: TestClient):
 
 @pytest.mark.apitest
 def test_paginated_with_a_page(client: TestClient):
-    response = client.get("/pagination/paginated", params={'page': 5})
+    response = client.get("/pagination/paginated", params={"page": 5})
 
     data = PaginatedResult.parse_obj(response.json())
 
@@ -52,7 +52,7 @@ def test_paginated_with_a_page(client: TestClient):
 
 @pytest.mark.apitest
 def test_paginated_with_a_page_beyond_bounds(client: TestClient):
-    response = client.get("/pagination/paginated", params={'page': 10000})
+    response = client.get("/pagination/paginated", params={"page": 10000})
 
     data = PaginatedResult.parse_obj(response.json())
 
@@ -64,20 +64,20 @@ def test_paginated_with_a_page_beyond_bounds(client: TestClient):
 
 @pytest.mark.apitest
 def test_paginated_with_negative_page(client: TestClient):
-    response = client.get("/pagination/paginated", params={'page': -5})
+    response = client.get("/pagination/paginated", params={"page": -5})
 
     assert response.status_code == 422
 
 
 @pytest.mark.apitest
 def test_paginated_with_negative_page_size(client: TestClient):
-    response = client.get("/pagination/paginated", params={'page_size': -5})
+    response = client.get("/pagination/paginated", params={"page_size": -5})
 
     assert response.status_code == 422
 
 
 @pytest.mark.apitest
 def test_paginated_with_largest_page_size(client: TestClient):
-    response = client.get("/pagination/paginated", params={'page_size': 10e6})
+    response = client.get("/pagination/paginated", params={"page_size": 10e6})
 
     assert response.status_code == 422

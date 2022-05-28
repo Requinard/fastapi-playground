@@ -14,6 +14,7 @@ class PaginatedResult(GenericModel, Generic[PaginatedType]):
     """
     A wrapped around `PaginatedType` that provides page information.
     """
+
     page: int
     page_size: int
     page_count: int
@@ -24,7 +25,9 @@ class PaginatedResult(GenericModel, Generic[PaginatedType]):
 PaginatorFunction = Callable[[List[PaginatedType]], PaginatedResult[PaginatedType]]
 
 
-def with_paginator(page: int = Query(0, ge=0, le=1_000_000), page_size: int = Query(100, ge=1, le=1000)) -> PaginatorFunction:
+def with_paginator(
+    page: int = Query(0, ge=0, le=1_000_000), page_size: int = Query(100, ge=1, le=1000)
+) -> PaginatorFunction:
     """
     A FastAPI dependency that paginates in-memory data sources. It uses dependencies to automatically get the params from the request.
 
@@ -43,7 +46,7 @@ def with_paginator(page: int = Query(0, ge=0, le=1_000_000), page_size: int = Qu
             page=page,
             page_size=page_size,
             page_count=math.floor(len(items) / page_size),
-            data=items[start_item:end_item]
+            data=items[start_item:end_item],
         )
 
     return paginate
@@ -70,7 +73,9 @@ def get_unpaginated() -> List[int]:
 
 
 @pagination_router.get("/paginated", response_model=PaginatedResult[int])
-def get_paginated(paginator: PaginatorFunction = Depends(with_paginator)) -> PaginatedResult[int]:
+def get_paginated(
+    paginator: PaginatorFunction = Depends(with_paginator),
+) -> PaginatedResult[int]:
     """
     Get the `example_list` and paginate it with the pagination dependency.
 

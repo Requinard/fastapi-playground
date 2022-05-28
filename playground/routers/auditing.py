@@ -21,7 +21,9 @@ class Auditor:
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         for message in self.messages:
-            print(f"AUDIT ({self.audit_name}) - CLIENT {self.request.client.host}:{self.request.client.port} - HOST: {self.request.url} - {message}")
+            print(
+                f"AUDIT ({self.audit_name}) - CLIENT {self.request.client.host}:{self.request.client.port} - HOST: {self.request.url} - {message}"
+            )
 
     def add_message(self, message: str):
         self.messages.append(message)
@@ -60,23 +62,23 @@ auditing_router = APIRouter()
 
 
 @auditing_router.get("/manual")
-async def auditing_with_manual_messages(auditor=Depends(ParamaterizedAuditor("manual"))):
+async def auditing_with_manual_messages(
+    auditor=Depends(ParamaterizedAuditor("manual")),
+):
     """
     An endpoint that manually calls the auditor to add messages
     """
     auditor.add_message("test")
     auditor.add_message("test 2")
 
-    return {
-        "hello": "world"
-    }
+    return {"hello": "world"}
 
 
-@auditing_router.get("/automatic", dependencies=[Depends(ParamaterizedAuditor("automatic"))])
+@auditing_router.get(
+    "/automatic", dependencies=[Depends(ParamaterizedAuditor("automatic"))]
+)
 async def auditing_with_automatic_messages():
     """
     An endpoint that uses an `Auditor` without manually adding messages to it. It will still log some actions.
     """
-    return {
-        "hello": "world"
-    }
+    return {"hello": "world"}

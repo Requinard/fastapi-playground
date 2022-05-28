@@ -17,19 +17,24 @@ class TimeRangedModel(SQLModel, table=True):
     """
     A SQLModel that can be inserted into a database. Any database will work as SQLAlchemy will take care of the implementation specifics.
     """
+
     id: Optional[int] = Field(None, primary_key=True, le=2**8)
     comment: str = Field(...)
     date_created: datetime = Field(..., sa_column=Column(DateTime))
 
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 TimerangeFilterFunction = Callable[[Any, SelectOfScalar[T]], SelectOfScalar[T]]
 
 
 def with_timerange(
-    time_from: Optional[datetime] = Query(None, description="The minimum datetime of items to include"),
-    time_to: Optional[datetime] = Query(None, description="The maximum datetime of items to include")
+    time_from: Optional[datetime] = Query(
+        None, description="The minimum datetime of items to include"
+    ),
+    time_to: Optional[datetime] = Query(
+        None, description="The maximum datetime of items to include"
+    ),
 ) -> TimerangeFilterFunction:
     """
     A FastAPI dependency to generically filter on a date column.
@@ -63,7 +68,9 @@ def with_timerange(
 PaginatorFilterFunction = Callable[[SelectOfScalar[T]], SelectOfScalar[T]]
 
 
-def with_paginator(page: int = Query(0, ge=0, le=2**8), page_size: int = Query(100, ge=0, le=1000)) -> PaginatorFilterFunction:
+def with_paginator(
+    page: int = Query(0, ge=0, le=2**8), page_size: int = Query(100, ge=0, le=1000)
+) -> PaginatorFilterFunction:
     """
     A FastAPI dependency to apply pagination via the SQL query. See `playground.paginator.with_paginator` for more details.
 
@@ -82,7 +89,11 @@ def with_paginator(page: int = Query(0, ge=0, le=2**8), page_size: int = Query(1
 
 
 @time_range_router.get("/", response_model=List[TimeRangedModel], tags=["Pagination"])
-async def get_comments(session: AsyncSession = Depends(get_session), apply_timerange=Depends(with_timerange), paginator=Depends(with_paginator)):
+async def get_comments(
+    session: AsyncSession = Depends(get_session),
+    apply_timerange=Depends(with_timerange),
+    paginator=Depends(with_paginator),
+):
     """
     Get a list of all `TimeRangedModels`. It uses an async database engine and is non-blocking.
 
@@ -104,7 +115,7 @@ async def get_comments(session: AsyncSession = Depends(get_session), apply_timer
 
 @time_range_router.post("/")
 async def create_test_comments(session: AsyncSession = Depends(get_session)):
-    """"
+    """ "
     Create a set of `TimeRangedModels` as an example.
     """
     for i in range(10):
@@ -123,11 +134,10 @@ class ModelCreateSerializer(BaseModel):
 
 
 @time_range_router.post("/create", response_model=TimeRangedModel)
-async def create_new(model: ModelCreateSerializer, session: AsyncSession = Depends(get_session)):
-    time_model = TimeRangedModel(
-        comment=model.comment,
-        date_created=datetime.now()
-    )
+async def create_new(
+    model: ModelCreateSerializer, session: AsyncSession = Depends(get_session)
+):
+    time_model = TimeRangedModel(comment=model.comment, date_created=datetime.now())
 
     session.add(time_model)
 

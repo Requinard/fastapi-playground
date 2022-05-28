@@ -8,7 +8,7 @@ def web_app(client: TestClient):
     return schemathesis.from_dict(client.app.openapi())
 
 
-schema = schemathesis.from_pytest_fixture('web_app')
+schema = schemathesis.from_pytest_fixture("web_app")
 
 
 @schema.parametrize()

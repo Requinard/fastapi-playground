@@ -16,7 +16,12 @@ def get_database_engine(settings=get_settings()) -> Engine:
     sqlite_url = f"sqlite:///{settings.database_url}"
 
     connect_args = {"check_same_thread": False}
-    engine = create_engine(sqlite_url, echo=settings.database_echo, echo_pool=settings.database_echo, connect_args=connect_args)
+    engine = create_engine(
+        sqlite_url,
+        echo=settings.database_echo,
+        echo_pool=settings.database_echo,
+        connect_args=connect_args,
+    )
 
     # Don't do this for actual projects. It runs DDL.
     SQLModel.metadata.create_all(engine)

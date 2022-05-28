@@ -7,7 +7,7 @@ def test_auditing_manual(capfd, client: TestClient):
     response = client.get("/auditing/manual")
     data = response.json()
     assert response.status_code == 200
-    assert data['hello'] == "world"
+    assert data["hello"] == "world"
 
     stdout, stderr = capfd.readouterr()
 

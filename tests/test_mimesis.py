@@ -8,7 +8,7 @@ def name_to_upper(name: str):
     return name.upper()
 
 
-@pytest.mark.parametrize('mimesis_locale', ['de', 'nl', 'uk'])
+@pytest.mark.parametrize("mimesis_locale", ["de", "nl", "uk"])
 @pytest.mark.repeat(3)
 def test_name_to_upper(mimesis, mimesis_locale):
     """

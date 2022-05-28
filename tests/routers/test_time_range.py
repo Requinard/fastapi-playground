@@ -12,7 +12,7 @@ from playground.routers.time_range import TimeRangedModel, ModelCreateSerializer
 async def create_comments(async_session: AsyncSession):
     comment = TimeRangedModel(
         comment="Hey uhh guys, watch out for this Covid19 thing ok?",
-        date_created=datetime(year=2020, month=3, day=11)
+        date_created=datetime(year=2020, month=3, day=11),
     )
 
     async_session.add(comment)
@@ -30,9 +30,7 @@ def test_get_comments_works(client: TestClient):
 
 @pytest.mark.apitest
 def test_comments_exclude_with_time_from(client: TestClient):
-    response = client.get("/timeranged/", params={
-        'time_from': datetime.now()
-    })
+    response = client.get("/timeranged/", params={"time_from": datetime.now()})
 
     data = response.json()
 
@@ -41,9 +39,9 @@ def test_comments_exclude_with_time_from(client: TestClient):
 
 @pytest.mark.apitest
 def test_comments_include_with_time_from(client: TestClient):
-    response = client.get("/timeranged/", params={
-        'time_from': datetime(year=2020, month=1, day=1)
-    })
+    response = client.get(
+        "/timeranged/", params={"time_from": datetime(year=2020, month=1, day=1)}
+    )
 
     data = response.json()
 
@@ -52,9 +50,9 @@ def test_comments_include_with_time_from(client: TestClient):
 
 @pytest.mark.apitest
 def test_exclude_with_time_to(client: TestClient):
-    response = client.get("/timeranged/", params={
-        'time_to': datetime(year=2020, month=1, day=1)
-    })
+    response = client.get(
+        "/timeranged/", params={"time_to": datetime(year=2020, month=1, day=1)}
+    )
 
     data = response.json()
 
@@ -63,9 +61,9 @@ def test_exclude_with_time_to(client: TestClient):
 
 @pytest.mark.apitest
 def test_include_with_time_to(client: TestClient):
-    response = client.get("/timeranged/", params={
-        'time_to': datetime(year=2022, month=1, day=1)
-    })
+    response = client.get(
+        "/timeranged/", params={"time_to": datetime(year=2022, month=1, day=1)}
+    )
 
     data = response.json()
 
@@ -83,9 +81,7 @@ def test_with_paginator_first_page(client: TestClient):
 
 @pytest.mark.apitest
 def test_paginator_with_empty_page(client: TestClient):
-    response = client.get("/timeranged", params={
-        'page': 2**8
-    })
+    response = client.get("/timeranged", params={"page": 2**8})
 
     data = response.json()
 
@@ -99,6 +95,7 @@ def test_create_new_item(client: TestClient):
 
     With this we can quickly test a range of without writing individual test cases.
     """
+
     @given(instance=st.builds(ModelCreateSerializer))
     def inner(instance: ModelCreateSerializer):
         """
@@ -110,6 +107,6 @@ def test_create_new_item(client: TestClient):
 
         data = response.json()
 
-        assert data['comment'] == instance.comment
+        assert data["comment"] == instance.comment
 
     inner()
