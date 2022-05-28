@@ -3,7 +3,6 @@ from functools import lru_cache
 from typing import Callable, TypeVar, List
 
 from fastapi import Query, APIRouter, Depends
-from pydantic import PositiveInt
 from pydantic.generics import GenericModel, Generic
 
 PaginatedType = TypeVar("PaginatedType")

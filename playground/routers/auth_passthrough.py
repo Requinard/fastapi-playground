@@ -18,7 +18,7 @@ def raise_on_4xx_5xx(response: httpx.Response):
                 "message": "Upstream request failed",
                 "upstream_request": str(e.request)
             }
-        )
+        ) from e
 
 
 async def a_raise_on_4xx_5xx(response: httpx.Response):
@@ -36,7 +36,7 @@ async def a_raise_on_4xx_5xx(response: httpx.Response):
                 "message": "Upstream request failed",
                 "upstream_request": str(response.request)
             }
-        )
+        ) from e
 
 
 def with_http_client(request: Request) -> httpx.Client:
