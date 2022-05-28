@@ -84,7 +84,7 @@ def test_with_paginator_first_page(client: TestClient):
 @pytest.mark.apitest
 def test_paginator_with_empty_page(client: TestClient):
     response = client.get("/timeranged", params={
-        'page': 500
+        'page': 2**8
     })
 
     data = response.json()

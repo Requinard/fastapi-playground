@@ -25,6 +25,8 @@ flake8 = "^4.0.1"
 pytest-repeat = "^0.9.1"
 respx = "^0.19.2"
 anyio = {extras = ["trio"], version = "^3.6.1"}
+hypothesis = "^6.46.9"
+schemathesis = "^3.15.2"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

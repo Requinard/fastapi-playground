@@ -3,6 +3,7 @@ from functools import lru_cache
 from typing import Callable, TypeVar, List
 
 from fastapi import Query, APIRouter, Depends
+from pydantic import PositiveInt
 from pydantic.generics import GenericModel, Generic
 
 PaginatedType = TypeVar("PaginatedType")
@@ -23,7 +24,8 @@ class PaginatedResult(GenericModel, Generic[PaginatedType]):
 
 PaginatorFunction = Callable[[List[PaginatedType]], PaginatedResult[PaginatedType]]
 
-def with_paginator(page: int = Query(0, ge=0), page_size: int = Query(100, ge=0, le=1000)) -> PaginatorFunction:
+
+def with_paginator(page: int = Query(0, ge=0, le=1_000_000), page_size: int = Query(100, ge=1, le=1000)) -> PaginatorFunction:
     """
     A FastAPI dependency that paginates in-memory data sources. It uses dependencies to automatically get the params from the request.
 
@@ -69,7 +71,7 @@ def get_unpaginated() -> List[int]:
 
 
 @pagination_router.get("/paginated", response_model=PaginatedResult[int])
-def get_paginated(paginator: PaginatorFunction=Depends(with_paginator)) -> PaginatedResult[int]:
+def get_paginated(paginator: PaginatorFunction = Depends(with_paginator)) -> PaginatedResult[int]:
     """
     Get the `example_list` and paginate it with the pagination dependency.
 

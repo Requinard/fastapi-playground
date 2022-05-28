@@ -17,7 +17,7 @@ class TimeRangedModel(SQLModel, table=True):
     """
     A SQLModel that can be inserted into a database. Any database will work as SQLAlchemy will take care of the implementation specifics.
     """
-    id: Optional[int] = Field(None, primary_key=True)
+    id: Optional[int] = Field(None, primary_key=True, le=2**8)
     comment: str = Field(...)
     date_created: datetime = Field(..., sa_column=Column(DateTime))
 
@@ -63,7 +63,7 @@ def with_timerange(
 PaginatorFilterFunction = Callable[[SelectOfScalar[T]], SelectOfScalar[T]]
 
 
-def with_paginator(page: int = Query(0, ge=0), page_size: int = Query(100, ge=0, le=1000)) -> PaginatorFilterFunction:
+def with_paginator(page: int = Query(0, ge=0, le=2**8), page_size: int = Query(100, ge=0, le=1000)) -> PaginatorFilterFunction:
     """
     A FastAPI dependency to apply pagination via the SQL query. See `playground.paginator.with_paginator` for more details.
 

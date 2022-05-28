@@ -22,6 +22,7 @@ tests/conftest.py|Creates pytest fixtures for the database, async database and a
 tests/mimesis.py|A small test case to test fake data with mimesis.
 tests/mimesis.py|Run tests repeatedly and with parameterized instances.
 tests/routers/test_*.py|Test API endpoints, backed by an in-memory SQLite database.
+tests/test_schematesis.py|Automatically test the *entire* API from the spec without writing any cases!
 
 ## Why is FastAPI so neat
 
