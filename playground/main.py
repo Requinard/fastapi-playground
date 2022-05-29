@@ -9,6 +9,7 @@ from starlette.responses import RedirectResponse
 
 from playground.routers.auditing import auditing_router
 from playground.routers.health import health_router
+
 # Create the app and apply some middleware
 from playground.routers.http_audited import http_audited_router
 from playground.routers.http_authorized import auth_passthrough_router
