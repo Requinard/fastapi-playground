@@ -8,12 +8,13 @@ from starlette.requests import Request
 from starlette.responses import RedirectResponse
 
 from playground.routers.auditing import auditing_router
-from playground.routers.auth_passthrough import auth_passthrough_router
 from playground.routers.health import health_router
+# Create the app and apply some middleware
+from playground.routers.http_audited import http_audited_router
+from playground.routers.http_authorized import auth_passthrough_router
 from playground.routers.paginator import pagination_router
 from playground.routers.time_range import time_range_router
 
-# Create the app and apply some middleware
 app = FastAPI(default_response_class=ORJSONResponse)
 
 app.add_middleware(GZipMiddleware, minimum_size=1000)
@@ -48,3 +49,6 @@ app.include_router(
     auth_passthrough_router, prefix="/auth-passthrough", tags=["Auth", "HTTP"]
 )
 app.include_router(health_router, prefix="/health", tags=["Health"])
+app.include_router(
+    http_audited_router, prefix="/http-audited", tags=["HTTP", "Auditing"]
+)

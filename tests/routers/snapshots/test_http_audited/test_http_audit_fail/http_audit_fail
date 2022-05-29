@@ -1,0 +1,3 @@
+AUDIT (AUDIT_FAIL) FAILED - google.com to google.com - None
+AUDIT (AUDIT_FAIL) SUCCESS - ifconfig.me to ifconfig.me - None
+AUDIT (AUDIT_FAIL) FAILED - testclient to testserver - Initial request
