@@ -33,6 +33,30 @@ tests/test_schematesis.py|Automatically test the *entire* API from the spec with
 - Open-ended dependency system that makes dependencies a breeze to manage
 - Fully type annotated
 
+## What are some other cool tools in here
+
+### Hypothesis
+
+Hypothesis is a data generator for test cases. It can generate random strings, numbers and even `Pydantic` models! This makes is very useful to automatically write unit tests
+without setting up a gazillion test cases.
+
+### Schemathesis
+
+Built on top of Hypothesis, schemathesis allows us to `automatically` test an entire API. We can point it at an OpenAPI spec and it will immediately try every endpoint. If errors
+occur or the endpoint responds outside of its documentation, schemathesis will throw it as an error.
+
+### Pytest extensions
+
+- pytest-fast-first > Runs the fastest tests first and the slowest tests last
+- pytest-clarity > Improve error messages by providing diffs
+- pytest-snapshot > Write and validate tests with snapshots. Useful when there are a lot of validations to do
+- pytest-repeat > Run a test multiple times. Useful when dealing with randomness
+- respx > Mock HTTP servers to test API calls
+
+### Black
+
+Black in a code-formatter that does not let you configure it. It's for the best.
+
 ## How to run it?
 
 First make sure you have the following installed:
@@ -52,7 +76,6 @@ You can now open http://127.0.0.1:8000 in your browser. Uvicorn will automatical
 ### What about docker?
 
 Of course it runs in docker as well. Simply run `docker-compose up -d` to start it.
-
 
 ### What about code quality tools
 

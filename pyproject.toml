@@ -11,11 +11,10 @@ uvicorn = "^0.17.6"
 sqlmodel = "^0.0.6"
 uuid = "^1.30"
 msgpack-asgi = "^1.1.0"
-pyproject-flake8 = "^0.0.1-alpha.4"
-pytest-mimesis = "^1.1.0"
 httpx = "^0.23.0"
 aiosqlite = "^0.17.0"
 async-lru = "^1.0.3"
+python-jose = "^3.3.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.1.2"
@@ -24,13 +23,15 @@ pytest-cov = "^3.0.0"
 flake8 = "^4.0.1"
 pytest-repeat = "^0.9.1"
 respx = "^0.19.2"
-anyio = {extras = ["trio"], version = "^3.6.1"}
+anyio = { extras = ["trio"], version = "^3.6.1" }
 hypothesis = "^6.46.9"
 schemathesis = "^3.15.2"
 pytest-clarity = "^1.0.1"
 pytest-fast-first = "^1.0.3"
 black = "^22.3.0"
 pytest-snapshot = "^0.9.0"
+pyproject-flake8 = "^0.0.1-alpha.4"
+pytest-mimesis = "^1.1.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -38,7 +39,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
 markers = [
-    "apitest: mark a test as once that interacts with the API. These can be slow.",
+  "apitest: mark a test as once that interacts with the API. These can be slow.",
 ]
 
 [tool.mypy]
